@@ -1,0 +1,150 @@
+﻿# Estructura inicial sugerida - ia-challenge
+
+Este archivo responde a la Parte B del proyecto: pedir a la IA una estructura inicial antes de escribir codigo.
+
+## 1. Arbol de carpetas sugerido
+
+ia-challenge/
+|-- AGENTS.md
+|-- OPENAI.md
+|-- README.md
+|-- requirements.txt
+|-- .env.example
+|-- .gitignore
+|-- config/
+|   |-- database.yml
+|   `-- spark_config.yml
+|-- docs/
+|   |-- ANALISIS_MULTIHOPE.md
+|   |-- PLAN_RUTA_IA_CHALLENGE.md
+|   |-- ESTRUCTURA_INICIAL.txt
+|   |-- MODELO_LOGICO_COMERCIAL.md
+|   `-- DASHBOARD_PLAN.md
+|-- src/
+|   |-- __init__.py
+|   |-- utils/
+|   |   |-- __init__.py
+|   |   |-- config_loader.py
+|   |   `-- spark_session.py
+|   |-- ingest/
+|   |   |-- __init__.py
+|   |   |-- extract_tables.py
+|   |   |-- ingest_customers.py
+|   |   |-- ingest_products.py
+|   |   |-- ingest_sales.py
+|   |   `-- ingest_shops.py
+|   |-- transform/
+|   |   |-- __init__.py
+|   |   `-- build_comercial.py
+|   |-- export/
+|   |   |-- __init__.py
+|   |   `-- dashboard_data.py
+|   `-- run_pipeline.py
+|-- data/
+|   |-- raw/
+|   |-- analytics/
+|   |   `-- comercial/
+|   `-- dashboard/
+|-- dashboard/
+|   |-- index.html
+|   `-- assets/
+|-- tests/
+|   |-- __init__.py
+|   |-- test_build_comercial.py
+|   `-- test_dashboard_data.py
+
+## 2. Proposito de cada archivo o carpeta
+
+AGENTS.md
+- Contexto operativo para agentes IA: objetivo, reglas tecnicas, comandos esperados y advertencias de datos.
+
+OPENAI.md
+- Registro del uso de IA y decisiones tomadas durante el proyecto.
+
+README.md
+- Documento publico principal. Debe explicar objetivo, tablas, proceso, dataset `comercial`, dashboard y ejecucion.
+
+requirements.txt
+- Dependencias Python necesarias para correr el pipeline.
+
+.env.example
+- Plantilla de variables de entorno. Debe incluir `DB_USER` y `DB_PASSWORD` sin valores reales.
+
+.gitignore
+- Evita subir `.env`, `.venv`, caches y archivos generados no deseados.
+
+config/database.yml
+- Configuracion no secreta de MySQL: host, puerto, base, driver y opciones.
+
+config/spark_config.yml
+- Configuracion de Spark local y conector JDBC MySQL.
+
+docs/ANALISIS_MULTIHOPE.md
+- Analisis del proyecto base y de la base de datos real.
+
+docs/PLAN_RUTA_IA_CHALLENGE.md
+- Plan general del proyecto final.
+
+docs/ESTRUCTURA_INICIAL.txt
+- Este archivo. Documenta la estructura propuesta antes de codificar.
+
+docs/MODELO_LOGICO_COMERCIAL.md
+- Explicacion del modelo logico del dataset `comercial` antes de implementar joins.
+
+docs/DASHBOARD_PLAN.md
+- Plan del dashboard: HTML, librerias, componentes y datos requeridos.
+
+src/utils/config_loader.py
+- Carga `.env`, YAML y construye configuracion de conexion.
+
+src/utils/spark_session.py
+- Crea la SparkSession con configuracion centralizada.
+
+src/ingest/extract_tables.py
+- Logica generica para extraer tablas desde MySQL y guardarlas en `data/raw/<tabla>/`.
+
+src/ingest/ingest_*.py
+- Entrypoints especificos por tabla.
+
+src/transform/build_comercial.py
+- Construye el dataset analitico `comercial` desde las cuatro tablas crudas.
+
+src/export/dashboard_data.py
+- Genera los agregados necesarios para el dashboard.
+
+src/run_pipeline.py
+- Ejecuta el flujo completo en orden.
+
+data/raw/
+- Datos crudos en Parquet por tabla.
+
+data/analytics/comercial/
+- Dataset analitico final `comercial` en formato Parquet.
+
+data/dashboard/
+- Datos intermedios o salidas auxiliares para el dashboard.
+
+dashboard/index.html
+- Dashboard final que debe abrir en navegador sin servidor dedicado.
+
+dashboard/assets/
+- Recursos del dashboard, si se necesitan.
+
+tests/
+- Pruebas unitarias de transformaciones y agregados.
+
+## 3. Orden recomendado de implementacion
+
+1. Crear archivos de contexto IA: `AGENTS.md`, `OPENAI.md` y este `docs/ESTRUCTURA_INICIAL.txt`.
+2. Crear configuracion base: `.gitignore`, `.env.example`, `requirements.txt`, `config/database.yml`, `config/spark_config.yml`.
+3. Documentar el modelo logico en `docs/MODELO_LOGICO_COMERCIAL.md`.
+4. Implementar utilidades: `config_loader.py` y `spark_session.py`.
+5. Implementar ingesta de `customers`, `products`, `sales` y `shops`.
+6. Implementar `build_comercial.py` con joins y columnas analiticas.
+7. Guardar `comercial` en `data/analytics/comercial/` en formato Parquet.
+8. Documentar el plan de dashboard en `docs/DASHBOARD_PLAN.md`.
+9. Implementar agregados de dashboard en `dashboard_data.py`.
+10. Crear `dashboard/index.html` con KPI, linea, pastel y barras.
+11. Crear tests minimos.
+12. Completar `README.md`.
+13. Validar localmente y publicar en GitHub.
