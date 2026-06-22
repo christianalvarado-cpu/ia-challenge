@@ -170,3 +170,17 @@ El dashboard incluye:
 - Grafico de barras de ventas por producto.
 
 El HTML puede abrirse directamente en navegador, sin servidor dedicado. Usa Chart.js por CDN y embebe los datos agregados dentro del propio `index.html`.
+
+## Archivos minimos del repositorio
+
+| Requisito | Ruta | Estado |
+|---|---|---|
+| Dashboard HTML | `dashboard/index.html` | Incluido |
+| Codigo fuente de ingesta | `src/ingest/` | Incluido |
+| Codigo fuente de transformacion | `src/transform/build_comercial.py` | Incluido |
+| Codigo fuente de dashboard/exportacion | `src/export/dashboard_data.py` | Incluido |
+| README | `README.md` | Incluido |
+| Contexto IA para agentes | `AGENTS.md` | Incluido |
+| Contexto IA/OpenAI | `OPENAI.md` | Incluido |
+| Configuracion no secreta | `config/` | Incluido |
+| Documentacion tecnica | `docs/` | Incluido |
