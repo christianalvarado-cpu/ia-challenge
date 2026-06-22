@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Comercial</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #657080;
+      --line: #d9dee7;
+      --accent: #2563eb;
+      --accent-2: #0f766e;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--ink); }
+    header { padding: 28px 32px 18px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .subtitle { margin: 0; color: var(--muted); }
+    main { width: min(1180px, calc(100% - 32px)); margin: 22px auto 36px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); padding: 18px; }
+    .kpi { grid-column: span 4; }
+    .wide { grid-column: span 12; }
+    .half { grid-column: span 6; }
+    .label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+    .value { font-size: 34px; font-weight: 700; letter-spacing: 0; }
+    .small { color: var(--muted); font-size: 13px; margin-top: 6px; }
+    h2 { margin: 0 0 14px; font-size: 18px; }
+    .chart-wrap { height: 340px; }
+    .chart-wrap.small { height: 320px; }
+    footer { color: var(--muted); font-size: 12px; margin-top: 18px; }
+    @media (max-width: 850px) {
+      header { padding: 22px 18px 16px; }
+      .kpi, .half, .wide { grid-column: span 12; }
+      .chart-wrap, .chart-wrap.small { height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dashboard Comercial</h1>
+    <p class="subtitle">Analisis de ventas construido desde el dataset Parquet comercial.</p>
+  </header>
+  <main>
+    <section class="grid">
+      <article class="card kpi">
+        <div class="label">Total vendido</div>
+        <div class="value" id="totalSold">$0.00</div>
+        <div class="small" id="dateRange"></div>
+      </article>
+      <article class="card kpi">
+        <div class="label">Filas analiticas</div>
+        <div class="value" id="totalRows">0</div>
+        <div class="small">Grano: linea de venta</div>
+      </article>
+      <article class="card kpi">
+        <div class="label">Dataset fuente</div>
+        <div class="value" style="font-size: 20px;" id="sourceDataset">comercial</div>
+        <div class="small" id="generatedAt"></div>
+      </article>
+      <article class="card wide">
+        <h2>Tendencia diaria de ventas - ultimos 30 dias</h2>
+        <div class="chart-wrap"><canvas id="dailySalesChart"></canvas></div>
+      </article>
+      <article class="card half">
+        <h2>Participacion de ventas por tienda</h2>
+        <div class="chart-wrap small"><canvas id="shopPieChart"></canvas></div>
+      </article>
+      <article class="card half">
+        <h2>Ventas por producto</h2>
+        <div class="chart-wrap small"><canvas id="productBarChart"></canvas></div>
+      </article>
+    </section>
+    <footer>Archivo local: dashboard/index.html</footer>
+  </main>
+
+  <script>
+    const dashboardData = {
+  "metadata": {
+    "generated_at": "2026-06-22T15:12:59+00:00",
+    "source_dataset": "data/analytics/comercial",
+    "row_count": 100
+  },
+  "kpis": {
+    "total_sold": 3028.54,
+    "total_rows": 100,
+    "date_start": "2025-05-27",
+    "date_end": "2025-06-25"
+  },
+  "daily_sales_last_30_days": [
+    {
+      "sale_date": "2025-05-27",
+      "total_sold": 76.78
+    },
+    {
+      "sale_date": "2025-05-28",
+      "total_sold": 101.03
+    },
+    {
+      "sale_date": "2025-05-29",
+      "total_sold": 57.6
+    },
+    {
+      "sale_date": "2025-05-30",
+      "total_sold": 102.9
+    },
+    {
+      "sale_date": "2025-05-31",
+      "total_sold": 91.11
+    },
+    {
+      "sale_date": "2025-06-01",
+      "total_sold": 16.21
+    },
+    {
+      "sale_date": "2025-06-02",
+      "total_sold": 75.24
+    },
+    {
+      "sale_date": "2025-06-03",
+      "total_sold": 39.46
+    },
+    {
+      "sale_date": "2025-06-04",
+      "total_sold": 92.74
+    },
+    {
+      "sale_date": "2025-06-05",
+      "total_sold": 0.0
+    },
+    {
+      "sale_date": "2025-06-06",
+      "total_sold": 189.33
+    },
+    {
+      "sale_date": "2025-06-07",
+      "total_sold": 126.96
+    },
+    {
+      "sale_date": "2025-06-08",
+      "total_sold": 51.21
+    },
+    {
+      "sale_date": "2025-06-09",
+      "total_sold": 97.11
+    },
+    {
+      "sale_date": "2025-06-10",
+      "total_sold": 7.68
+    },
+    {
+      "sale_date": "2025-06-11",
+      "total_sold": 186.07
+    },
+    {
+      "sale_date": "2025-06-12",
+      "total_sold": 94.17
+    },
+    {
+      "sale_date": "2025-06-13",
+      "total_sold": 87.97
+    },
+    {
+      "sale_date": "2025-06-14",
+      "total_sold": 47.06
+    },
+    {
+      "sale_date": "2025-06-15",
+      "total_sold": 36.84
+    },
+    {
+      "sale_date": "2025-06-16",
+      "total_sold": 168.99
+    },
+    {
+      "sale_date": "2025-06-17",
+      "total_sold": 118.31
+    },
+    {
+      "sale_date": "2025-06-18",
+      "total_sold": 267.61
+    },
+    {
+      "sale_date": "2025-06-19",
+      "total_sold": 316.59
+    },
+    {
+      "sale_date": "2025-06-20",
+      "total_sold": 48.66
+    },
+    {
+      "sale_date": "2025-06-21",
+      "total_sold": 41.42
+    },
+    {
+      "sale_date": "2025-06-22",
+      "total_sold": 141.8
+    },
+    {
+      "sale_date": "2025-06-23",
+      "total_sold": 202.22
+    },
+    {
+      "sale_date": "2025-06-24",
+      "total_sold": 118.77
+    },
+    {
+      "sale_date": "2025-06-25",
+      "total_sold": 26.7
+    }
+  ],
+  "sales_by_shop": [
+    {
+      "shop_name": "Sucursal Guayaquil Norte",
+      "total_sold": 844.81
+    },
+    {
+      "shop_name": "Sucursal Quito Sur",
+      "total_sold": 824.64
+    },
+    {
+      "shop_name": "Sucursal Cuenca Centro",
+      "total_sold": 780.7
+    },
+    {
+      "shop_name": "Sin tienda",
+      "total_sold": 578.39
+    }
+  ],
+  "sales_by_product": [
+    {
+      "product_name": "Limpiador Desinfectante",
+      "total_sold": 750.07
+    },
+    {
+      "product_name": "Cloro Concentrado",
+      "total_sold": 724.89
+    },
+    {
+      "product_name": "Limpiavidrios",
+      "total_sold": 614.68
+    },
+    {
+      "product_name": "Limpiador de Pisos",
+      "total_sold": 472.94
+    },
+    {
+      "product_name": "Detergente Multiusos",
+      "total_sold": 465.96
+    }
+  ]
+};
+
+    const currency = new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' });
+    const colors = ['#2563eb', '#0f766e', '#dc2626', '#9333ea', '#ca8a04', '#0891b2', '#4f46e5', '#16a34a'];
+
+    document.getElementById('totalSold').textContent = currency.format(dashboardData.kpis.total_sold);
+    document.getElementById('totalRows').textContent = dashboardData.kpis.total_rows.toLocaleString('es-EC');
+    document.getElementById('dateRange').textContent = `${dashboardData.kpis.date_start} a ${dashboardData.kpis.date_end}`;
+    document.getElementById('sourceDataset').textContent = dashboardData.metadata.source_dataset;
+    document.getElementById('generatedAt').textContent = `Generado: ${dashboardData.metadata.generated_at}`;
+
+    new Chart(document.getElementById('dailySalesChart'), {
+      type: 'line',
+      data: {
+        labels: dashboardData.daily_sales_last_30_days.map(row => row.sale_date),
+        datasets: [{ label: 'Ventas diarias', data: dashboardData.daily_sales_last_30_days.map(row => row.total_sold), borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.12)', fill: true, tension: 0.25, pointRadius: 3 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { callback: value => currency.format(value) } } }, plugins: { tooltip: { callbacks: { label: ctx => currency.format(ctx.raw) } } } }
+    });
+
+    new Chart(document.getElementById('shopPieChart'), {
+      type: 'pie',
+      data: { labels: dashboardData.sales_by_shop.map(row => row.shop_name), datasets: [{ data: dashboardData.sales_by_shop.map(row => row.total_sold), backgroundColor: colors }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label: ctx => `${ctx.label}: ${currency.format(ctx.raw)}` } } } }
+    });
+
+    new Chart(document.getElementById('productBarChart'), {
+      type: 'bar',
+      data: { labels: dashboardData.sales_by_product.map(row => row.product_name), datasets: [{ label: 'Ventas por producto', data: dashboardData.sales_by_product.map(row => row.total_sold), backgroundColor: '#0f766e' }] },
+      options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { callback: value => currency.format(value) } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => currency.format(ctx.raw) } } } }
+    });
+  </script>
+</body>
+</html>

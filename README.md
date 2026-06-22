@@ -139,3 +139,34 @@ Busca la seccion "Configuracion de Hadoop/winutils en Windows".
 - `docs/ESTRUCTURA_INICIAL.txt`: estructura sugerida por IA.
 - `docs/MODELO_LOGICO_COMERCIAL.md`: modelo logico del dataset comercial.
 - `docs/PARQUET_COMERCIAL.md`: ruta y validacion del Parquet final.
+
+## Dashboard HTML
+
+La Parte F genera un dashboard HTML autocontenido a partir del dataset Parquet `comercial`.
+
+Archivo final:
+
+```text
+dashboard/index.html
+```
+
+Codigo generador:
+
+```text
+src/export/dashboard_data.py
+```
+
+Generar o regenerar dashboard:
+
+```powershell
+.\.venv\Scripts\python.exe -m src.export.dashboard_data
+```
+
+El dashboard incluye:
+
+- KPI del total vendido.
+- Tendencia diaria de ventas de los ultimos 30 dias.
+- Grafico de pastel de participacion por tienda.
+- Grafico de barras de ventas por producto.
+
+El HTML puede abrirse directamente en navegador, sin servidor dedicado. Usa Chart.js por CDN y embebe los datos agregados dentro del propio `index.html`.
