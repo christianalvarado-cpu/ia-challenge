@@ -79,3 +79,39 @@ Cada tabla ingerida incluye columnas de trazabilidad:
 - `docs/ANALISIS_MULTIHOPE.md`: analisis del proyecto base y base de datos.
 - `docs/PLAN_RUTA_IA_CHALLENGE.md`: plan general del proyecto.
 - `docs/ESTRUCTURA_INICIAL.txt`: estructura sugerida por IA.
+
+## Notebook de pruebas
+
+Para probar el flujo paso a paso puedes abrir:
+
+`	ext
+notebooks/00_pipeline_pruebas.ipynb
+`
+
+
+
+## Entorno local
+
+Las instrucciones completas para crear el entorno virtual estan en:
+
+```text
+docs/ENTORNO_LOCAL.md
+```
+
+Resumen rapido en PowerShell:
+
+```powershell
+cd C:\Users\chris\Downloads\ia-challenge
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+## Nota importante para Windows: Hadoop/winutils
+
+PySpark en Windows requiere `winutils.exe` para trabajar correctamente con archivos locales y Parquet. Las instrucciones para usar la ruta por defecto en Descargas o cambiarla a cualquier carpeta estan en:
+
+```text
+docs/ENTORNO_LOCAL.md
+```
+
+Busca la seccion "Configuracion de Hadoop/winutils en Windows".

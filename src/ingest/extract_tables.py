@@ -90,19 +90,29 @@ def ingest_table(table_name: str, spark: SparkSession | None = None) -> int:
             active_spark.stop()
 
 
-def ingest_tables(table_names: tuple[str, ...] = DEFAULT_TABLES) -> dict[str, int]:
-    """Ingest multiple source tables using one SparkSession."""
-    spark = create_spark_session("ingest_source_tables")
+def ingest_tables(
+    table_names: tuple[str, ...] = DEFAULT_TABLES,
+    spark: SparkSession | None = None,
+) -> dict[str, int]:
+    """Ingest multiple source tables using one SparkSession.
+
+    When a SparkSession is provided, it is reused and left open. This keeps
+    notebooks interactive after running the full ingestion step.
+    """
+    owns_spark = spark is None
+    active_spark = spark or create_spark_session("ingest_source_tables")
     try:
         results: dict[str, int] = {}
         for table_name in table_names:
-            results[table_name] = ingest_table(table_name, spark=spark)
+            results[table_name] = ingest_table(table_name, spark=active_spark)
         return results
     finally:
-        spark.stop()
+        if owns_spark:
+            active_spark.stop()
 
 
 if __name__ == "__main__":
     counts = ingest_tables()
     for table, count in counts.items():
         logger.info("%s: %s rows written to raw", table, count)
+

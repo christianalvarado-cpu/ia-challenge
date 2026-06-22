@@ -8,3 +8,9 @@ logs/
 *.log
 .DS_Store
 Thumbs.db
+
+# Generated data
+/data/raw/*
+!/data/raw/.gitkeep
+/data/dashboard/*
+!/data/dashboard/.gitkeep
