@@ -4,13 +4,15 @@ Proyecto final para construir un dataset analitico comercial desde una base MySQ
 
 ## Estado actual
 
-Implementado hasta Parte C:
+Implementado hasta Parte E:
 
 - Estructura inicial del proyecto.
 - Archivos de contexto IA.
 - Configuracion de conexion no secreta.
 - Carga de credenciales desde `.env`.
 - Ingesta reproducible de tablas fuente.
+- Dataset analitico `comercial` construido desde las 4 tablas fuente.
+- Salida `comercial` guardada en formato Parquet.
 
 ## Tablas fuente
 
@@ -43,16 +45,16 @@ DB_PASSWORD=tu_password
 Instala dependencias en un entorno virtual y ejecuta:
 
 ```powershell
-python -m src.run_pipeline
+.\.venv\Scripts\python.exe -m src.run_pipeline
 ```
 
 Tambien puedes ejecutar tablas individuales:
 
 ```powershell
-python -m src.ingest.ingest_customers
-python -m src.ingest.ingest_products
-python -m src.ingest.ingest_sales
-python -m src.ingest.ingest_shops
+.\.venv\Scripts\python.exe -m src.ingest.ingest_customers
+.\.venv\Scripts\python.exe -m src.ingest.ingest_products
+.\.venv\Scripts\python.exe -m src.ingest.ingest_sales
+.\.venv\Scripts\python.exe -m src.ingest.ingest_shops
 ```
 
 ## Salida de ingesta
@@ -74,21 +76,35 @@ Cada tabla ingerida incluye columnas de trazabilidad:
 - `_source_table`
 - `_extracted_at`
 
-## Documentacion
+## Dataset analitico comercial
 
-- `docs/ANALISIS_MULTIHOPE.md`: analisis del proyecto base y base de datos.
-- `docs/PLAN_RUTA_IA_CHALLENGE.md`: plan general del proyecto.
-- `docs/ESTRUCTURA_INICIAL.txt`: estructura sugerida por IA.
+La estructura analitica final se llama `comercial` y se genera desde las tablas `customers`, `products`, `sales` y `shops`.
+
+Codigo:
+
+```text
+src/transform/build_comercial.py
+```
+
+Ruta oficial del Parquet:
+
+```text
+data/analytics/comercial/
+```
+
+Documentacion especifica:
+
+```text
+docs/PARQUET_COMERCIAL.md
+```
 
 ## Notebook de pruebas
 
 Para probar el flujo paso a paso puedes abrir:
 
-`	ext
+```text
 notebooks/00_pipeline_pruebas.ipynb
-`
-
-
+```
 
 ## Entorno local
 
@@ -115,3 +131,11 @@ docs/ENTORNO_LOCAL.md
 ```
 
 Busca la seccion "Configuracion de Hadoop/winutils en Windows".
+
+## Documentacion
+
+- `docs/ANALISIS_MULTIHOPE.md`: analisis del proyecto base y base de datos.
+- `docs/PLAN_RUTA_IA_CHALLENGE.md`: plan general del proyecto.
+- `docs/ESTRUCTURA_INICIAL.txt`: estructura sugerida por IA.
+- `docs/MODELO_LOGICO_COMERCIAL.md`: modelo logico del dataset comercial.
+- `docs/PARQUET_COMERCIAL.md`: ruta y validacion del Parquet final.
