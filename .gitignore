@@ -14,3 +14,7 @@ Thumbs.db
 !/data/raw/.gitkeep
 /data/dashboard/*
 !/data/dashboard/.gitkeep
+
+# Spark/Hadoop local metadata
+*.crc
+_SUCCESS
