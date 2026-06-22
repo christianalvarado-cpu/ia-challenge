@@ -1,1 +1,8 @@
-﻿# Configuracion de base de datos pendiente de implementar en Parte C.
+﻿database:
+  host: www.bigdataybi.com
+  port: 3306
+  name: fake
+  driver: com.mysql.cj.jdbc.Driver
+  options:
+    useSSL: "false"
+    allowPublicKeyRetrieval: "true"

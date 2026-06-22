@@ -1,1 +1,8 @@
-﻿# Python dependencies will be defined in the implementation phase.
+﻿pyspark==3.5.1
+python-dotenv==1.0.1
+PyYAML==6.0.3
+pytest==8.1.1
+pytest-mock==3.14.0
+pandas==2.2.2
+pyarrow==16.0.0
+ipykernel
