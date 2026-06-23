@@ -29,7 +29,7 @@ def load_comercial_dataset(path: Path = COMERCIAL_PATH) -> pd.DataFrame:
 
 def build_dashboard_payload(df: pd.DataFrame) -> dict[str, Any]:
     """Build all aggregates required by the HTML dashboard."""
-    required = {"sale_date", "subtotal", "shop_name", "product_name"}
+    required = {"sale_date", "subtotal", "shop_name", "product_name", "customer_status"}
     missing = required.difference(df.columns)
     if missing:
         raise ValueError(f"Missing required comercial columns for dashboard: {sorted(missing)}")
@@ -39,6 +39,7 @@ def build_dashboard_payload(df: pd.DataFrame) -> dict[str, Any]:
     data["subtotal"] = pd.to_numeric(data["subtotal"], errors="coerce").fillna(0.0)
     data["shop_name"] = data["shop_name"].fillna("Sin tienda")
     data["product_name"] = data["product_name"].fillna("Sin producto")
+    data["customer_status"] = data["customer_status"].fillna("Sin estado")
 
     max_date = data["sale_date"].max()
     min_date = data["sale_date"].min()
@@ -62,6 +63,12 @@ def build_dashboard_payload(df: pd.DataFrame) -> dict[str, Any]:
 
     sales_by_product = (
         data.groupby("product_name", as_index=False)["subtotal"]
+        .sum()
+        .sort_values("subtotal", ascending=False)
+    )
+
+    sales_by_customer_status = (
+        data.groupby("customer_status", as_index=False)["subtotal"]
         .sum()
         .sort_values("subtotal", ascending=False)
     )
@@ -90,6 +97,10 @@ def build_dashboard_payload(df: pd.DataFrame) -> dict[str, Any]:
             {"product_name": str(row.product_name), "total_sold": _money(row.subtotal)}
             for row in sales_by_product.itertuples(index=False)
         ],
+        "sales_by_customer_status": [
+            {"customer_status": str(row.customer_status), "total_sold": _money(row.subtotal)}
+            for row in sales_by_customer_status.itertuples(index=False)
+        ],
     }
 
 
@@ -112,7 +123,6 @@ def render_dashboard_html(payload: dict[str, Any]) -> str:
       --muted: #657080;
       --line: #d9dee7;
       --accent: #2563eb;
-      --accent-2: #0f766e;
       --shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
     }
     * { box-sizing: border-box; }
@@ -174,6 +184,10 @@ def render_dashboard_html(payload: dict[str, Any]) -> str:
         <h2>Ventas por producto</h2>
         <div class="chart-wrap small"><canvas id="productBarChart"></canvas></div>
       </article>
+      <article class="card wide">
+        <h2>Ventas por estado de cliente</h2>
+        <div class="chart-wrap small"><canvas id="customerStatusChart"></canvas></div>
+      </article>
     </section>
     <footer>Archivo local: dashboard/index.html</footer>
   </main>
@@ -210,11 +224,17 @@ def render_dashboard_html(payload: dict[str, Any]) -> str:
       data: { labels: dashboardData.sales_by_product.map(row => row.product_name), datasets: [{ label: 'Ventas por producto', data: dashboardData.sales_by_product.map(row => row.total_sold), backgroundColor: '#0f766e' }] },
       options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { callback: value => currency.format(value) } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => currency.format(ctx.raw) } } } }
     });
+
+    new Chart(document.getElementById('customerStatusChart'), {
+      type: 'bar',
+      data: { labels: dashboardData.sales_by_customer_status.map(row => row.customer_status), datasets: [{ label: 'Ventas por estado de cliente', data: dashboardData.sales_by_customer_status.map(row => row.total_sold), backgroundColor: '#9333ea' }] },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { callback: value => currency.format(value) } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => currency.format(ctx.raw) } } } }
+    });
   </script>
 </body>
 </html>
 """
-    return template.replace('__DASHBOARD_JSON__', dashboard_json)
+    return template.replace("__DASHBOARD_JSON__", dashboard_json)
 
 
 def write_dashboard(html: str, output_path: Path = DASHBOARD_PATH) -> None:
@@ -240,4 +260,3 @@ if __name__ == "__main__":
     print(f"Dashboard written to {DASHBOARD_PATH}")
     print(f"Rows: {payload['metadata']['row_count']}")
     print(f"Total sold: {payload['kpis']['total_sold']}")
-

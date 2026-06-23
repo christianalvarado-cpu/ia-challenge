@@ -116,6 +116,7 @@ El dashboard incluye:
 - Tendencia diaria de ventas de los ultimos 30 dias.
 - Grafico de pastel de participacion de ventas por tienda.
 - Grafico de barras de ventas por producto.
+- Grafico de barras de ventas por estado de cliente.
 
 El HTML es autocontenido: los datos agregados quedan embebidos dentro de `index.html` y los graficos usan Chart.js por CDN.
 
@@ -220,6 +221,7 @@ docs/DASHBOARD_PLAN.md
 
 ```text
 notebooks/00_pipeline_pruebas.ipynb
+notebooks/01_generar_entregables.ipynb
 ```
 
 ## Validaciones
@@ -265,3 +267,6 @@ Busca la seccion "Configuracion de Hadoop/winutils en Windows".
 | Contexto IA/OpenAI | `OPENAI.md` | Incluido |
 | Configuracion no secreta | `config/` | Incluido |
 | Documentacion tecnica | `docs/` | Incluido |
+
+
+

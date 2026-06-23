@@ -30,7 +30,7 @@ El dashboard se organiza en cuatro bloques principales:
 1. Encabezado con titulo, descripcion y fecha de generacion.
 2. KPI del total vendido.
 3. Grafico de linea para tendencia diaria de ventas de los ultimos 30 dias.
-4. Dos graficos comparativos: pastel por tienda y barras por producto.
+4. Tres graficos comparativos: pastel por tienda, barras por producto y barras por estado de cliente.
 
 ## Componentes requeridos
 
@@ -39,7 +39,7 @@ El dashboard se organiza en cuatro bloques principales:
 | KPI total vendido | Card numerica | `SUM(subtotal)` |
 | Tendencia diaria ultimos 30 dias | Line chart | `sale_date`, `SUM(subtotal)` |
 | Participacion por tienda | Pie chart | `shop_name`, `SUM(subtotal)` |
-| Ventas por producto | Bar chart | `product_name`, `SUM(subtotal)` |
+| Ventas por producto | Bar chart | `product_name`, `SUM(subtotal)` |`n| Ventas por estado de cliente | Horizontal bar chart | `customer_status`, `SUM(subtotal)` |
 
 ## Organizacion de datos requerida
 
@@ -64,3 +64,4 @@ src/export/dashboard_data.py
 ```
 
 Este script lee `data/analytics/comercial/`, calcula los agregados y escribe `dashboard/index.html`.
+

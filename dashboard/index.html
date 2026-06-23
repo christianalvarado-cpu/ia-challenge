@@ -14,7 +14,6 @@
       --muted: #657080;
       --line: #d9dee7;
       --accent: #2563eb;
-      --accent-2: #0f766e;
       --shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
     }
     * { box-sizing: border-box; }
@@ -76,6 +75,10 @@
         <h2>Ventas por producto</h2>
         <div class="chart-wrap small"><canvas id="productBarChart"></canvas></div>
       </article>
+      <article class="card wide">
+        <h2>Ventas por estado de cliente</h2>
+        <div class="chart-wrap small"><canvas id="customerStatusChart"></canvas></div>
+      </article>
     </section>
     <footer>Archivo local: dashboard/index.html</footer>
   </main>
@@ -83,7 +86,7 @@
   <script>
     const dashboardData = {
   "metadata": {
-    "generated_at": "2026-06-22T15:12:59+00:00",
+    "generated_at": "2026-06-23T14:27:33+00:00",
     "source_dataset": "data/analytics/comercial",
     "row_count": 100
   },
@@ -254,6 +257,16 @@
       "product_name": "Detergente Multiusos",
       "total_sold": 465.96
     }
+  ],
+  "sales_by_customer_status": [
+    {
+      "customer_status": "activo",
+      "total_sold": 2636.76
+    },
+    {
+      "customer_status": "inactivo",
+      "total_sold": 391.78
+    }
   ]
 };
 
@@ -285,6 +298,12 @@
       type: 'bar',
       data: { labels: dashboardData.sales_by_product.map(row => row.product_name), datasets: [{ label: 'Ventas por producto', data: dashboardData.sales_by_product.map(row => row.total_sold), backgroundColor: '#0f766e' }] },
       options: { responsive: true, maintainAspectRatio: false, scales: { y: { ticks: { callback: value => currency.format(value) } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => currency.format(ctx.raw) } } } }
+    });
+
+    new Chart(document.getElementById('customerStatusChart'), {
+      type: 'bar',
+      data: { labels: dashboardData.sales_by_customer_status.map(row => row.customer_status), datasets: [{ label: 'Ventas por estado de cliente', data: dashboardData.sales_by_customer_status.map(row => row.total_sold), backgroundColor: '#9333ea' }] },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { callback: value => currency.format(value) } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => currency.format(ctx.raw) } } } }
     });
   </script>
 </body>
