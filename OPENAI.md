@@ -17,3 +17,11 @@ Este proyecto usa asistencia de IA para planificacion, documentacion y apoyo en 
 - Usar `Chart.js` por CDN para el dashboard HTML.
 - Generar HTML autocontenido para evitar problemas CORS al abrir localmente.
 - Usar LEFT JOIN desde `sales` hacia dimensiones para conservar todas las ventas.
+
+## Prompt de documentacion final
+
+El prompt sugerido para redactar o revisar el README final esta en:
+
+```text
+docs/PROMPT_DOCUMENTACION_FINAL.md
+```
