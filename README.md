@@ -2,6 +2,24 @@
 
 Proyecto final de datos que se conecta a una base MySQL real, ingiere tablas fuente, construye un dataset analitico unico llamado `comercial`, lo guarda en formato Parquet y genera un dashboard HTML local.
 
+## Inicio rapido recomendado
+
+La forma mas simple de reconstruir y revisar el proyecto es usar el notebook operativo:
+
+```text
+notebooks/01_generar_entregables.ipynb
+```
+
+Ese notebook ejecuta el flujo completo: valida configuracion, ingiere `customers`, `products`, `sales` y `shops`, construye `comercial`, valida el Parquet y regenera `dashboard/index.html`.
+
+En Windows, antes de ejecutar Spark, revisa la configuracion de Hadoop/winutils. PySpark necesita `winutils.exe` para escribir Parquet localmente. Las instrucciones para usar la ruta por defecto en Descargas o cambiarla a cualquier carpeta estan en:
+
+```text
+docs/ENTORNO_LOCAL.md
+```
+
+Busca la seccion `Configuracion de Hadoop/winutils en Windows`.
+
 ## Objetivo del proyecto
 
 El objetivo es construir una solucion reproducible de analitica comercial que permita:
